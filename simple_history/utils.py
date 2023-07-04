@@ -67,6 +67,7 @@ def bulk_create_with_history(
     default_date=None,
     update_conflicts=False,
     update_fields=None,
+    unique_fields=None,
 ):
     """
     Bulk create the objects specified by objs while also bulk creating
@@ -98,7 +99,9 @@ def bulk_create_with_history(
     second_transaction_required = True
     with transaction.atomic(savepoint=False):
         objs_with_id = model_manager.bulk_create(
-            objs, batch_size=batch_size, ignore_conflicts=ignore_conflicts, update_conflicts=update_conflicts, update_fields=update_fields
+            objs, batch_size=batch_size, ignore_conflicts=ignore_conflicts,
+            update_conflicts=update_conflicts, update_fields=update_fields,
+            unique_fields=unique_fields
         )
         if objs_with_id and objs_with_id[0].pk and (not ignore_conflicts or update_conflicts):
             second_transaction_required = False
